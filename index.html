@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastislav Somora | Test Lead & QA Engineer</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --text-main: #1f2937;
+            --text-muted: #4b5563;
+            --bg-light: #f9fafb;
+            --bg-card: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: #ffffff;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+        }
+
+        .contact-links a {
+            color: #ffffff;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .contact-links a:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: -2rem auto 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            background: var(--bg-card);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--bg-light);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-category h3 {
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .badge {
+            background: var(--bg-light);
+            color: var(--text-main);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Experience Timeline */
+        .job {
+            margin-bottom: 2rem;
+        }
+
+        .job:last-child {
+            margin-bottom: 0;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 0.25rem;
+        }
+
+        .job-title {
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 1.1rem;
+        }
+
+        .job-company {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .job-date {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        ul {
+            list-style-type: disc;
+            padding-left: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        li {
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        /* Hobbies Cards */
+        .hobbies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .hobby-card {
+            background: var(--bg-light);
+            padding: 1.25rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .hobby-card h3 {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+        }
+
+        .hobby-card p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 2.5rem 1rem;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Rastislav Somora</h1>
+        <p>Test Lead & Analytical QA Test Engineer with 10+ years of experience bridging hard & software[cite: 2].</p>
+        <div class="contact-links">
+            <a href="mailto:somorastik@gmail.com">somorastik@gmail.com</a>
+            <a href="tel:+421950264716">(+421) 950 264 716</a>
+            <a href="https://linkedin.com/in/rastislav-somora-10008370/" target="_blank">LinkedIn</a>
+            <span>Bratislava, Slovakia (Remote / Hybrid)[cite: 2]</span>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- About Section -->
+        <section>
+            <h2>Professional Summary</h2>
+            <p>Analytical Test Engineer with over a decade of experience across aerospace, fintech, and hardware domains[cite: 2]. Specialized in Python, LLM-scripting, Robot Framework, and Jenkins CI/CD automation, driven by a strong foundational background in audio engineering, industrial design[cite: 2], and electrical engineering.</p>
+        </section>
+
+        <!-- Technical Stack -->
+        <section>
+            <h2>Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Testing & Automation</h3>
+                    <div class="badge-container">
+                        <span class="badge">QF-Test (XML)</span>
+                        <span class="badge">Robot Framework</span>
+                        <span class="badge">Appium</span>
+                        <span class="badge">Selenium</span>
+                        <span class="badge">pytest</span>
+                        <span class="badge">Postman / REST API</span>
+                        <span class="badge">TestRail</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Development & Tools</h3>
+                    <div class="badge-container">
+                        <span class="badge">Python</span>
+                        <span class="badge">Jenkins CI/CD</span>
+                        <span class="badge">Git / GitLab</span>
+                        <span class="badge">SQL Databases</span>
+                        <span class="badge">Docker</span>
+                        <span class="badge">Android Studio</span>
+                        <span class="badge">LabView / VeriStand</span>
+                    </div>
+                </div>
+                <div class="skill-category">
+                    <h3>Hardware & Design</h3>
+                    <div class="badge-container">
+                        <span class="badge">KiCad</span>
+                        <span class="badge">Rhinoceros</span>
+                        <span class="badge">AutoCAD</span>
+                        <span class="badge">Embedded Systems</span>
+                        <span class="badge">HALT/HASS Testing</span>
+                        <span class="badge">Ableton Live</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section>
+            <h2>Career History</h2>
+            
+            <div class="job">
+                <div class="job-header">
+                    <span class="job-title">Test Lead - KPS.Max</span>
+                    <span class="job-date">2022 – 2026</span>
+                </div>
+                <div class="job-company">SHD AG[cite: 2]</div>
+                <ul>
+                    <li>Managed x86 application GUI test automation using QF-Test (XML) and LLM-driven scripting[cite: 2].</li>
+                    <li>Maintained CI/CD pipelines utilizing Jenkins[cite: 2].</li>
+                    <li>Conducted REST API validation via Postman and database queries alongside Agile tracking (Jira, TestRail, GitLab)[cite: 2].</li>
+                </ul>
+            </div>
+
+            <div class="job" style="margin-top: 1.5rem;">
+                <div class="job-header">
+                    <span class="job-title">Test Engineer - PAX A920</span>
+                    <span class="job-date">2020 – 2022</span>
+                </div>
+                <div class="job-company">Fiserv[cite: 2]</div>
+                <ul>
+                    <li>Executed POS & SoftPOS automation pipelines using Appium and specialized robotic arms[cite: 2].</li>
+                    <li>Developed test code with Python, Robot Framework, and Docker; designed 3D printed testing fixtures[cite: 2].</li>
+                </ul>
+            </div>
+
+            <div class="job" style="margin-top: 1.5rem;">
+                <div class="job-header">
+                    <span class="job-title">Test Engineer - Searzone Sonic</span>
+                    <span class="job-date">2018 – 2020</span>
+                </div>
+                <div class="job-company">Honeywell[cite: 2]</div>
+                <ul>
+                    <li>Performed hardware/software testing of embedded systems, environmental HALT/HASS, and vibration testing[cite: 2].</li>
+                    <li>Validated communication protocols including RS-485, Bluetooth, and 4-20mA sensors[cite: 2].</li>
+                </ul>
+            </div>
+
+            <div class="job" style="margin-top: 1.5rem;">
+                <div class="job-header">
+                    <span class="job-title">System Development Specialist - TJ 1000 Turbojet</span>
+                    <span class="job-date">2016 – 2017</span>
+                </div>
+                <div class="job-company">UNIS[cite: 2]</div>
+                <ul>
+                    <li>Handled jet engine ECU verification and testing using LabView, VeriStand, and TestStand[cite: 2].</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Education -->
+        <section>
+            <h2>Education</h2>
+            <div class="job-header">
+                <span class="job-title">M.Sc. in Electrical Engineering & Electronics</span>
+                <span class="job-date">2008 – 2013</span>
+            </div>
+            <div class="job-company">Brno University of Technology[cite: 2]</div>
+        </section>
+
+        <!-- Hobbies & Engineering Passions -->
+        <section>
+            <h2>Beyond the Office: Engineering & Craft Passions</h2>
+            <p>My analytical mindset and hardware curiosity naturally cross over into personal hardware projects and creative hobbies:</p>
+            <div class="hobbies-grid">
+                <div class="hobby-card">
+                    <h3>Audio Electronics</h3>
+                    <p>Designing, building, and tweaking custom microphones and precision audio amplifiers.</p>
+                </div>
+                <div class="hobby-card">
+                    <h3>Android Development</h3>
+                    <p>Building companion utility applications and experimenting with mobile code stacks in Android Studio.</p>
+                </div>
+                <div class="hobby-card">
+                    <h3>Woodworking</h3>
+                    <p>Applying structural precision and industrial design skills to craft complex wooden builds.</p>
+                </div>
+                <div class="hobby-card">
+                    <h3>Cycling</h3>
+                    <p>Endurance riding and mechanical tuning, keeping a sharp eye on physical optimization.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Rastislav Somora. Built for GitHub Pages.</p>
+    </footer>
+
+</body>
+</html>
