@@ -37,14 +37,7 @@
 
         header h1 {
             font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 600px;
-            margin: 0 auto 1.5rem auto;
+            margin-bottom: 1rem;
         }
 
         .contact-links {
@@ -126,7 +119,7 @@
 
         /* Experience Timeline */
         .job {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .job:last-child {
@@ -155,6 +148,15 @@
         .job-date {
             font-size: 0.9rem;
             color: var(--text-muted);
+        }
+
+        .job-img {
+            width: 100%;
+            max-height: 320px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin: 0.75rem 0;
+            border: 1px solid var(--border-color);
         }
 
         ul {
@@ -217,12 +219,10 @@
 
     <header>
         <h1>Rastislav Somora</h1>
-        <p>Test Lead & Analytical QA Test Engineer with 10+ years of experience bridging hard & software[cite: 2].</p>
         <div class="contact-links">
             <a href="mailto:somorastik@gmail.com">somorastik@gmail.com</a>
-            <a href="tel:+421950264716">(+421) 950 264 716</a>
             <a href="https://linkedin.com/in/rastislav-somora-10008370/" target="_blank">LinkedIn</a>
-            <span>Bratislava, Slovakia (Remote / Hybrid)[cite: 2]</span>
+            <span>Open to Remote / Hybrid</span>
         </div>
     </header>
 
@@ -231,7 +231,7 @@
         <!-- About Section -->
         <section>
             <h2>Professional Summary</h2>
-            <p>Analytical Test Engineer with over a decade of experience across aerospace, fintech, and hardware domains[cite: 2]. Specialized in Python, LLM-scripting, Robot Framework, and Jenkins CI/CD automation, driven by a strong foundational background in audio engineering, industrial design[cite: 2], and electrical engineering.</p>
+            <p>Analytical Test Engineer with over a decade of experience across aerospace, fintech, and hardware domains. Specialized in Python, LLM-scripting, Robot Framework, and Jenkins CI/CD automation, driven by a strong foundational background in audio engineering, industrial design, and electrical engineering.</p>
         </section>
 
         <!-- Technical Stack -->
@@ -285,46 +285,50 @@
                     <span class="job-title">Test Lead - KPS.Max</span>
                     <span class="job-date">2022 – 2026</span>
                 </div>
-                <div class="job-company">SHD AG[cite: 2]</div>
+                <div class="job-company">SHD AG</div>
+                <img src="shd.jpg" alt="SHD AG KPS.Max GUI Testing" class="job-img">
                 <ul>
-                    <li>Managed x86 application GUI test automation using QF-Test (XML) and LLM-driven scripting[cite: 2].</li>
-                    <li>Maintained CI/CD pipelines utilizing Jenkins[cite: 2].</li>
-                    <li>Conducted REST API validation via Postman and database queries alongside Agile tracking (Jira, TestRail, GitLab)[cite: 2].</li>
+                    <li>Managed x86 application GUI test automation using QF-Test (XML) and LLM-driven scripting.</li>
+                    <li>Maintained CI/CD pipelines utilizing Jenkins.</li>
+                    <li>Conducted REST API validation via Postman and database queries alongside Agile tracking (Jira, TestRail, GitLab).</li>
                 </ul>
             </div>
 
-            <div class="job" style="margin-top: 1.5rem;">
+            <div class="job">
                 <div class="job-header">
                     <span class="job-title">Test Engineer - PAX A920</span>
                     <span class="job-date">2020 – 2022</span>
                 </div>
-                <div class="job-company">Fiserv[cite: 2]</div>
+                <div class="job-company">Fiserv</div>
+                <img src="fiserv.jpg" alt="Fiserv POS Automated Testing Setup" class="job-img">
                 <ul>
-                    <li>Executed POS & SoftPOS automation pipelines using Appium and specialized robotic arms[cite: 2].</li>
-                    <li>Developed test code with Python, Robot Framework, and Docker; designed 3D printed testing fixtures[cite: 2].</li>
+                    <li>Executed POS & SoftPOS automation pipelines using Appium and specialized robotic arms.</li>
+                    <li>Developed test code with Python, Robot Framework, and Docker; designed 3D printed testing fixtures.</li>
                 </ul>
             </div>
 
-            <div class="job" style="margin-top: 1.5rem;">
+            <div class="job">
                 <div class="job-header">
                     <span class="job-title">Test Engineer - Searzone Sonic</span>
                     <span class="job-date">2018 – 2020</span>
                 </div>
-                <div class="job-company">Honeywell[cite: 2]</div>
+                <div class="job-company">Honeywell</div>
+                <img src="honeywell.jpg" alt="Honeywell Searzone Sonic Embedded Hardware Testing" class="job-img">
                 <ul>
-                    <li>Performed hardware/software testing of embedded systems, environmental HALT/HASS, and vibration testing[cite: 2].</li>
-                    <li>Validated communication protocols including RS-485, Bluetooth, and 4-20mA sensors[cite: 2].</li>
+                    <li>Performed hardware/software testing of embedded systems, environmental HALT/HASS, and vibration testing.</li>
+                    <li>Validated communication protocols including RS-485, Bluetooth, and 4-20mA sensors.</li>
                 </ul>
             </div>
 
-            <div class="job" style="margin-top: 1.5rem;">
+            <div class="job">
                 <div class="job-header">
                     <span class="job-title">System Development Specialist - TJ 1000 Turbojet</span>
                     <span class="job-date">2016 – 2017</span>
                 </div>
-                <div class="job-company">UNIS[cite: 2]</div>
+                <div class="job-company">UNIS</div>
+                <img src="unis.jpg" alt="UNIS Turbojet ECU Test Rig" class="job-img">
                 <ul>
-                    <li>Handled jet engine ECU verification and testing using LabView, VeriStand, and TestStand[cite: 2].</li>
+                    <li>Handled jet engine ECU verification and testing using LabView, VeriStand, and TestStand.</li>
                 </ul>
             </div>
         </section>
@@ -336,7 +340,7 @@
                 <span class="job-title">M.Sc. in Electrical Engineering & Electronics</span>
                 <span class="job-date">2008 – 2013</span>
             </div>
-            <div class="job-company">Brno University of Technology[cite: 2]</div>
+            <div class="job-company">Brno University of Technology</div>
         </section>
 
         <!-- Hobbies & Engineering Passions -->
@@ -360,14 +364,3 @@
                     <h3>Cycling</h3>
                     <p>Endurance riding and mechanical tuning, keeping a sharp eye on physical optimization.</p>
                 </div>
-            </div>
-        </section>
-
-    </div>
-
-    <footer>
-        <p>&copy; 2026 Rastislav Somora. Built for GitHub Pages.</p>
-    </footer>
-
-</body>
-</html>
