@@ -1,2 +1,2 @@
-# .github.io
+# somorastik.github.io
 portfolio
