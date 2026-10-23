@@ -1,0 +1,8 @@
+---
+---
+@import "{{ site.theme }}";
+
+/* Portfolio accent overrides: Morpho blue with Hacker terminal-green details. */
+:root { --morpho-blue: #54c9ff; --hacker-green: #39d353; }
+a { color: var(--morpho-blue); }
+a:hover { color: var(--hacker-green); }
