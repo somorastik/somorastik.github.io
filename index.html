@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>somorastik</title>
+<meta name="description" content="Browser instruments and projects: the LubkaM1 drum synth, a six-pad granular sampler and Great Chess.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f2a37'/%3E%3Crect x='7' y='15' width='4' height='10' rx='1' fill='%23f2b134'/%3E%3Crect x='14' y='8' width='4' height='17' rx='1' fill='%23e8edf2'/%3E%3Crect x='21' y='12' width='4' height='13' rx='1' fill='%23f2b134'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: fixed side menu on the left; the main area is either the project gallery or a full-height viewer
+   that runs the chosen instrument in a frame. On narrow screens the menu becomes a top bar with a drawer. */
+:root {
+  --bg: #f4f5f6;
+  --panel: #ffffff;
+  --ink: #18212b;
+  --ink-2: #5b6673;
+  --line: #dde1e6;
+  --accent: #b7791f;     /* brass */
+  --accent-ink: #ffffff;
+  --sel-bg: #18212b;
+  --sel-ink: #ffffff;
+  --f-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --side-w: 248px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #101418; --panel: #171c22; --ink: #e6eaee; --ink-2: #98a3ae; --line: #2a323b; --accent: #f2b134; --accent-ink: #15191e; --sel-bg: #e6eaee; --sel-ink: #101418; color-scheme: dark; }
+}
+:root[data-theme="dark"] { --bg: #101418; --panel: #171c22; --ink: #e6eaee; --ink-2: #98a3ae; --line: #2a323b; --accent: #f2b134; --accent-ink: #15191e; --sel-bg: #e6eaee; --sel-ink: #101418; color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 var(--f-sans); }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.app { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr); height: 100%; }
+
+/* side menu */
+.side { background: var(--panel); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 22px 16px 18px max(16px, env(safe-area-inset-left, 0px)); gap: 22px; overflow-y: auto; }
+.brand { display: block; text-decoration: none; padding: 0 8px; }
+.brand b { display: block; font-size: 19px; font-weight: 700; letter-spacing: -.01em; }
+.brand span { font-size: 12.5px; color: var(--ink-2); }
+.side .menu-btn { display: none; }
+nav { display: grid; gap: 18px; }
+.group { display: grid; gap: 2px; }
+.group h2 { margin: 0 0 4px; padding: 0 8px; font: 500 11px/1 var(--f-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+.item { display: grid; grid-template-columns: 28px minmax(0, 1fr); align-items: center; gap: 10px; padding: 8px; border-radius: 8px; text-decoration: none; }
+.item:hover { background: var(--bg); }
+.item[aria-current="page"] { background: var(--sel-bg); color: var(--sel-ink); }
+.item svg { width: 28px; height: 28px; }
+.item .t { font-weight: 600; font-size: 14.5px; line-height: 1.2; }
+.item .s { display: block; font-size: 12.5px; color: var(--ink-2); line-height: 1.3; }
+.item[aria-current="page"] .s { color: inherit; opacity: .7; }
+.side-foot { margin-top: auto; padding: 0 8px; font-size: 12.5px; color: var(--ink-2); }
+.side-foot a { color: var(--ink); }
+
+/* gallery */
+main { min-width: 0; height: 100%; overflow: hidden; }
+.view { height: 100%; }
+.gallery { overflow-y: auto; padding-block: 40px 56px; padding-left: max(16px, 4vw); padding-right: max(16px, 4vw, env(safe-area-inset-right, 0px)); }
+.gallery header { max-width: 1100px; margin: 0 auto 28px; }
+.gallery h1 { margin: 0 0 6px; font-size: clamp(26px, 3.4vw, 34px); letter-spacing: -.02em; text-wrap: balance; }
+.gallery header p { margin: 0; color: var(--ink-2); max-width: 62ch; }
+.cards { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 22px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; min-width: 0; }
+.card .shot { display: block; aspect-ratio: 16 / 10; background: var(--bg); border-bottom: 1px solid var(--line); overflow: hidden; }
+.card .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; transition: transform .3s; }
+.card .shot:hover img { transform: scale(1.03); }
+.card .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.kind { font: 500 11px/1 var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.card h3 { margin: 0; font-size: 19px; letter-spacing: -.01em; }
+.card p { margin: 0; color: var(--ink-2); font-size: 14px; }
+.card .acts { margin-top: auto; padding-top: 8px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 8px; font-weight: 600; font-size: 14px; text-decoration: none; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn:hover { border-color: var(--ink-2); }
+.btn.primary:hover { filter: brightness(1.06); border-color: var(--accent); }
+.src { font-size: 13px; color: var(--ink-2); }
+
+/* viewer */
+.viewer { display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.bar { display: flex; align-items: center; gap: 12px; padding: 10px max(16px, env(safe-area-inset-right, 0px)) 10px 18px; border-bottom: 1px solid var(--line); background: var(--panel); min-width: 0; flex-wrap: wrap; }
+.bar .title { display: grid; min-width: 0; margin-right: auto; }
+.bar .title b { font-size: 16px; }
+.bar .title span { font-size: 12.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bar .btn { height: 32px; font-size: 13px; padding: 0 12px; }
+iframe { width: 100%; height: 100%; border: 0; display: block; background: var(--bg); }
+
+@media (max-width: 760px) {
+  .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .side { flex-direction: row; flex-wrap: wrap; align-items: center; padding: 10px max(16px, env(safe-area-inset-right, 0px)) 10px max(16px, env(safe-area-inset-left, 0px)); gap: 10px; border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; position: relative; z-index: 5; }
+  .brand { margin-right: auto; padding: 0; }
+  .brand b { font-size: 17px; }
+  .brand span { display: none; }
+  .side .menu-btn { display: inline-flex; }
+  nav { display: none; width: 100%; padding: 6px 0 4px; }
+  .side.open nav { display: grid; }
+  .side-foot { display: none; }
+  .side.open .side-foot { display: block; width: 100%; margin: 0; padding: 4px 8px 6px; }
+  .gallery { padding-block: 24px 40px; }
+}
+@media (prefers-reduced-motion: reduce) { .card .shot img { transition: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side">
+    <a class="brand" href="#gallery"><b>somorastik</b><span>Instruments and projects</span></a>
+    <button class="btn menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav" aria-label="Site">
+      <div class="group">
+        <a class="item" href="#gallery" data-route="gallery">
+          <svg viewBox="0 0 28 28" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="8.5" height="8.5" rx="2"/><rect x="15.5" y="4" width="8.5" height="8.5" rx="2"/><rect x="4" y="15.5" width="8.5" height="8.5" rx="2"/><rect x="15.5" y="15.5" width="8.5" height="8.5" rx="2"/></g></svg>
+          <span><span class="t">Gallery</span><span class="s">All projects</span></span>
+        </a>
+      </div>
+      <div class="group" id="g-instruments"><h2>Instruments</h2></div>
+      <div class="group" id="g-projects"><h2>Projects</h2></div>
+    </nav>
+    <div class="side-foot">Source: <a href="https://github.com/somorastik/somorastik.github.io">GitHub repository</a>. Each project lives in its own branch.</div>
+  </aside>
+
+  <main>
+    <section class="view gallery" id="v-gallery" aria-labelledby="g-title">
+      <header>
+        <h1 id="g-title">Gallery</h1>
+        <p>Instruments and games that run in the browser. Pick one to open it here, or open it in its own tab for the full screen.</p>
+      </header>
+      <div class="cards" id="cards"></div>
+    </section>
+    <section class="view viewer" id="v-viewer" hidden>
+      <div class="bar">
+        <div class="title"><b id="vt"></b><span id="vs"></span></div>
+        <a class="btn" id="v-src" href="#" rel="noopener">Source branch</a>
+        <a class="btn" id="v-open" href="#" target="_blank" rel="noopener">Open in new tab ↗</a>
+      </div>
+      <iframe id="frame" title="Project" allow="autoplay; fullscreen; clipboard-write" src="about:blank"></iframe>
+    </section>
+  </main>
+</div>
+<script>
+(function () {
+  'use strict';
+  const REPO = 'https://github.com/somorastik/somorastik.github.io/tree/';
+  const PROJECTS = [
+    { id: 'lubkam1', group: 'instruments', name: 'LubkaM1', kind: 'Instrument · drum synth',
+      short: 'Six-voice drum synth',
+      desc: 'A six-voice digital drum synth with a 64-step sequencer, FX bus and kit morphing. Its engine is a study port of open-source drum-synth firmware, and it opens .SND kit and .PAT pattern files.',
+      icon: '<g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="6" width="21" height="16" rx="2.5"/><circle cx="9" cy="12" r="2.4"/><circle cx="16" cy="12" r="2.4"/><path d="M7 18h2M11.5 18h2M16 18h2M20.5 18h0" stroke-linecap="round"/></g>' },
+    { id: 'p6-sampler', group: 'instruments', name: 'Six-Pad Sampler', kind: 'Instrument · granular sampler',
+      short: 'Roland P-6 study',
+      desc: 'A clean-room study of the Roland P-6 workflow: six pads, a granular engine, effects and patterns. It loads your own P-6 backup files. Unofficial and not affiliated with Roland.',
+      icon: '<g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3.5" y="5" width="21" height="18" rx="2.5"/><rect x="7" y="13.5" width="4" height="4" rx="1"/><rect x="12" y="13.5" width="4" height="4" rx="1"/><rect x="17" y="13.5" width="4" height="4" rx="1"/><path d="M7 9.5h14" stroke-linecap="round"/></g>' },
+    { id: 'great-chess', group: 'projects', name: 'Great Chess', kind: 'Game · Tamerlane chess',
+      short: "Timur's chess",
+      desc: "Tamerlane's chess on the 11 × 10 board with citadels, played against the computer in 2D or 3D, with a tutorial and the full rules.",
+      icon: '<g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M9 23h10M10 20h8l-1-6h-6z"/><path d="M11 14c-1.5-1.5-1.2-4.6 1-5.6 1-.5 2-.4 2-.4s1-.1 2 .4c2.2 1 2.5 4.1 1 5.6"/><path d="M14 4v4M12.3 5.6h3.4" stroke-linecap="round"/></g>' },
+  ];
+  const $ = (s) => document.querySelector(s);
+  const groups = { instruments: $('#g-instruments'), projects: $('#g-projects') };
+  for (const p of PROJECTS) {
+    const a = document.createElement('a');
+    a.className = 'item'; a.href = '#' + p.id; a.dataset.route = p.id;
+    a.innerHTML = '<svg viewBox="0 0 28 28" aria-hidden="true">' + p.icon + '</svg><span><span class="t"></span><span class="s"></span></span>';
+    a.querySelector('.t').textContent = p.name; a.querySelector('.s').textContent = p.short;
+    groups[p.group].appendChild(a);
+    const c = document.createElement('article'); c.className = 'card';
+    c.innerHTML = '<a class="shot" href="#' + p.id + '"><img loading="lazy" alt="" width="960" height="600"></a>' +
+      '<div class="body"><span class="kind"></span><h3></h3><p></p><div class="acts"><a class="btn primary" href="#' + p.id + '">Launch</a>' +
+      '<a class="btn" target="_blank" rel="noopener">New tab ↗</a><a class="src" rel="noopener">Source</a></div></div>';
+    c.querySelector('img').src = 'assets/' + p.id + '.jpg';
+    c.querySelector('img').alt = 'Screenshot of ' + p.name;
+    c.querySelector('.kind').textContent = p.kind; c.querySelector('h3').textContent = p.name; c.querySelector('p').textContent = p.desc;
+    c.querySelector('.acts .btn:not(.primary)').href = p.id + '/';
+    c.querySelector('.src').href = REPO + p.id;
+    $('#cards').appendChild(c);
+  }
+  const side = $('#side'), menuBtn = $('#menu-btn'), frame = $('#frame');
+  menuBtn.addEventListener('click', () => { const o = side.classList.toggle('open'); menuBtn.setAttribute('aria-expanded', o); });
+  function route() {
+    const id = (location.hash || '#gallery').slice(1);
+    const p = PROJECTS.find((x) => x.id === id);
+    const cur = p ? p.id : 'gallery';
+    document.querySelectorAll('.item').forEach((a) => { if (a.dataset.route === cur) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    side.classList.remove('open'); menuBtn.setAttribute('aria-expanded', 'false');
+    $('#v-gallery').hidden = !!p; $('#v-viewer').hidden = !p;
+    if (p) {
+      $('#vt').textContent = p.name; $('#vs').textContent = p.kind;
+      $('#v-open').href = p.id + '/'; $('#v-src').href = REPO + p.id;
+      const want = new URL(p.id + '/', location.href).href;
+      if (frame.src !== want) frame.src = want;
+      frame.title = p.name;
+      document.title = p.name + ' · somorastik';
+    } else {
+      frame.src = 'about:blank'; // stop any running audio
+      document.title = 'somorastik';
+    }
+  }
+  window.addEventListener('hashchange', route);
+  route();
+})();
+</script>
+</body>
+</html>
