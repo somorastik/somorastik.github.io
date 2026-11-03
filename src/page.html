@@ -1,0 +1,356 @@
+<title>LubkaM1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Doto:wght@600;800&family=Saira+Semi+Condensed:wght@400;500;600;700&family=Share+Tech+Mono&family=Unbounded:wght@500;800&display=swap">
+<style>
+/* Layout: one instrument chassis; screen + encoders and the mixer side by side, the step sequencer
+   spans the full width below, and the study notes sit outside the chassis. */
+:root {
+  --bg: #c4cabd;          /* bench */
+  --chassis: #dfe3d8;     /* sage powder-coat */
+  --raised: #eef1ea;
+  --ink: #1b211d;
+  --ink-2: #566056;
+  --line: #a9b0a3;
+  --cap: #262c28;         /* graphite knob caps and keys */
+  --cap-2: #353c37;
+  --cap-ink: #e8ece3;
+  --led: #ff8a1f;         /* amber step LEDs */
+  --led-soft: rgba(255, 138, 31, .32);
+  --sel: #2c6b5b;         /* selected track / page */
+  --vfd-bg: #07120e;
+  --vfd: #7af3d0;
+  --vfd-dim: #24564a;
+  --shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 10px 30px rgba(30,40,32,.18);
+  --f-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --f-ui: "Saira Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-vfd: "Doto", "Share Tech Mono", ui-monospace, monospace;
+  --f-mono: "Share Tech Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1311; --chassis: #1a1f1c; --raised: #232925; --ink: #e1e7dd; --ink-2: #9aa597; --line: #374039;
+    --cap: #0c0f0d; --cap-2: #2b322d; --cap-ink: #dfe5da; --sel: #5cc4a6; --vfd-dim: #1d4a3f;
+    --shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 10px 30px rgba(0,0,0,.45); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1311; --chassis: #1a1f1c; --raised: #232925; --ink: #e1e7dd; --ink-2: #9aa597; --line: #374039;
+  --cap: #0c0f0d; --cap-2: #2b322d; --cap-ink: #dfe5da; --sel: #5cc4a6; --vfd-dim: #1d4a3f;
+  --shadow: 0 1px 0 rgba(255,255,255,.05) inset, 0 10px 30px rgba(0,0,0,.45); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-ui); font-size: 15px; line-height: 1.4; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-block: 20px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 18px; }
+button, select, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--sel); outline-offset: 2px; }
+.lbl-s { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; }
+
+/* chassis */
+.chassis { background: var(--chassis); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 18px; display: grid; gap: 18px; position: relative; min-width: 0; }
+.chassis::before, .chassis::after { content: ""; position: absolute; width: 7px; height: 7px; border-radius: 50%; background: var(--line); top: 9px; left: 9px; box-shadow: 0 0 0 1px var(--chassis) inset; }
+.chassis::after { left: auto; right: 9px; }
+
+/* top strip */
+.top { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; min-width: 0; }
+.brand h1 { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: clamp(26px, 4vw, 38px); letter-spacing: -.02em; line-height: 1; }
+.brand h1 .m1 { display: inline-block; font-weight: 500; font-size: .5em; vertical-align: .55em; margin-left: .25em; padding: .18em .45em .12em; border: 2px solid currentColor; border-radius: 4px; letter-spacing: .04em; }
+.brand p { margin: 0; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+.status { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
+.status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.status.on::before { background: var(--led); box-shadow: 0 0 8px var(--led); }
+.transport { display: flex; align-items: center; gap: 10px; }
+.play { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px 0 12px; border-radius: 10px; border: 1px solid var(--cap); background: var(--cap); color: var(--cap-ink); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; }
+.play .ic { width: 0; height: 0; border-left: 11px solid var(--led); border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+.play[aria-pressed="true"] .ic { width: 11px; height: 11px; border: 0; background: var(--led); border-radius: 2px; box-shadow: 0 0 10px var(--led); }
+
+/* browser row */
+.browser { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.6fr); gap: 14px 18px; align-items: end; }
+.field { display: grid; gap: 5px; min-width: 0; }
+.field select { width: 100%; height: 38px; border: 1px solid var(--line); background: var(--raised); border-radius: 8px; padding: 0 10px; min-width: 0; }
+.credit { font-size: 12.5px; color: var(--ink-2); min-height: 1.2em; }
+.credit:empty { display: none; }
+.morph { display: flex; gap: 10px; align-items: end; min-width: 0; }
+.morph .field { flex: 1; }
+.patterns-wrap { display: grid; gap: 5px; min-width: 0; }
+.patterns { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 4px; }
+.key { border: 1px solid var(--cap); background: var(--cap-2); color: var(--cap-ink); border-radius: 7px; min-height: 34px; font-weight: 600; font-size: 13px; letter-spacing: .03em; position: relative; }
+.key[aria-pressed="true"] { background: var(--sel); border-color: var(--sel); color: #fff; }
+.key:disabled { opacity: .35; cursor: default; }
+.pat-key { font-family: var(--f-mono); padding: 0; }
+.pat-key.empty { background: transparent; color: var(--ink-2); border-color: var(--line); }
+.pat-key.empty[aria-pressed="true"] { background: var(--sel); color: #fff; }
+.pat-key.pending { animation: blink .5s steps(2) infinite; }
+@keyframes blink { 50% { background: var(--led); color: var(--cap); } }
+.opts { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-2); }
+.opts label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.opts input { accent-color: var(--sel); }
+
+/* deck */
+.deck { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 18px; }
+.screen-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.vfd { background: var(--vfd-bg); color: var(--vfd); border-radius: 10px; padding: 14px 16px 12px; font-family: var(--f-vfd); box-shadow: 0 0 0 4px var(--cap) , 0 0 0 5px var(--line), inset 0 0 30px rgba(122,243,208,.06); display: grid; gap: 6px; min-width: 0; text-shadow: 0 0 6px rgba(122,243,208,.55); }
+.vfd .r1 { display: flex; gap: 12px; align-items: baseline; font-size: 17px; text-transform: uppercase; letter-spacing: .06em; font-weight: 800; flex-wrap: wrap; }
+.vfd .r1 .sep { color: var(--vfd-dim); text-shadow: none; }
+.vfd .r1 .tempo { margin-left: auto; }
+.vfd .pname { font-size: 15px; color: var(--vfd); opacity: .8; min-height: 1.4em; font-weight: 600; letter-spacing: .04em; overflow-wrap: anywhere; }
+.vfd .pval { font-size: clamp(28px, 4.2vw, 44px); line-height: 1.05; font-weight: 800; letter-spacing: .02em; min-height: 1.1em; overflow-wrap: anywhere; }
+.vfd .r3 { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; font-weight: 600; align-items: center; }
+.vfd .r3 .k { color: var(--vfd-dim); text-shadow: none; margin-right: 6px; }
+.vleds { display: inline-flex; gap: 5px; margin-left: auto; }
+.vled { width: 9px; height: 9px; border-radius: 2px; background: var(--vfd-dim); }
+.vled.lit { background: var(--vfd); box-shadow: 0 0 8px var(--vfd); }
+.keys-row { display: grid; gap: 6px; }
+.track-keys { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.track-key { display: flex; align-items: center; gap: 6px; padding: 0 8px; text-align: left; min-height: 36px; }
+.track-key .kname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; }
+.led { width: 7px; height: 7px; border-radius: 50%; background: rgba(0,0,0,.35); flex: none; transition: background .05s; }
+.led.lit { background: var(--led); box-shadow: 0 0 8px var(--led); }
+.page-keys { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 5px; }
+.page-key { font-size: 12.5px; text-transform: uppercase; letter-spacing: .08em; padding: 0 2px; }
+.page-key[data-page="step"], .page-key[data-page="fx"] { background: transparent; color: var(--ink); border-color: var(--ink-2); }
+.page-key[data-page="step"][aria-pressed="true"], .page-key[data-page="fx"][aria-pressed="true"] { background: var(--sel); border-color: var(--sel); color: #fff; }
+
+/* knobs */
+.knobs { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 8px 4px; padding: 14px 8px 10px; border-radius: 12px; background: var(--raised); border: 1px solid var(--line); min-height: 128px; align-content: center; flex: 1; }
+.knob { display: grid; justify-items: center; gap: 1px; min-width: 0; }
+.dial { width: 68px; height: 68px; touch-action: none; cursor: ns-resize; border-radius: 50%; }
+.dial svg { width: 100%; height: 100%; display: block; }
+.dial .arc-bg { fill: none; stroke: var(--line); stroke-width: 4; stroke-linecap: round; }
+.dial .arc { fill: none; stroke: var(--sel); stroke-width: 4; stroke-linecap: round; }
+.dial .cap { fill: var(--cap); stroke: var(--cap-2); stroke-width: 2; }
+.dial .tick { stroke: var(--led); stroke-width: 3; stroke-linecap: round; }
+.dial.on .cap, .dial:focus-visible .cap { stroke: var(--sel); }
+.k-val { font-family: var(--f-mono); font-size: 14px; min-height: 1.3em; color: var(--ink); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.k-label { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); font-weight: 700; }
+.knob-hint { grid-column: 1 / -1; margin: 0 0 4px; color: var(--ink-2); font-size: 13px; }
+.knob.mini .dial { width: 46px; height: 46px; }
+.knob.mini { grid-template-columns: auto auto; grid-template-rows: auto auto; column-gap: 8px; align-items: center; justify-items: start; }
+.knob.mini .dial { grid-row: 1 / 3; }
+.knob.mini .k-val { align-self: end; font-size: 15px; }
+.knob.mini .k-label { align-self: start; }
+
+/* mixer */
+.mixer { display: grid; grid-template-columns: repeat(7, 44px); gap: 6px; padding: 12px 12px 8px; border-radius: 12px; background: var(--raised); border: 1px solid var(--line); align-self: stretch; position: relative; }
+.fader { display: grid; grid-template-rows: 1fr auto auto; justify-items: center; gap: 6px; position: relative; }
+.fader .slot { width: 26px; min-height: 210px; height: 100%; border-radius: 6px; background: linear-gradient(90deg, transparent 11px, var(--cap) 11px, var(--cap) 15px, transparent 15px); position: relative; touch-action: none; cursor: ns-resize; }
+.fader .slot::before { content: ""; position: absolute; inset: 6px 2px; background: repeating-linear-gradient(0deg, var(--line) 0 1px, transparent 1px 12%); opacity: .8; pointer-events: none; mask: linear-gradient(90deg, #000 4px, transparent 4px, transparent 22px, #000 22px); -webkit-mask: linear-gradient(90deg, #000 4px, transparent 4px, transparent 22px, #000 22px); }
+.fcap { position: absolute; left: 0; width: 26px; height: 22px; border-radius: 4px; background: linear-gradient(var(--cap-2), var(--cap)); border: 1px solid var(--cap); box-shadow: 0 2px 4px rgba(0,0,0,.3); }
+.fcap::after { content: ""; position: absolute; left: 3px; right: 3px; top: 10px; height: 2px; background: var(--cap-ink); border-radius: 1px; }
+.slot.on .fcap::after, .slot:focus-visible .fcap::after { background: var(--led); }
+.f-label { font-size: 11px; letter-spacing: .12em; font-weight: 700; color: var(--ink-2); }
+.fader.master .f-label { color: var(--ink); }
+.meter { position: absolute; right: -9px; top: 0; bottom: 34px; width: 6px; display: flex; gap: 2px; align-items: flex-end; }
+.meter i { flex: 1; height: 0; background: linear-gradient(0deg, var(--sel) 0 70%, var(--led) 70% 92%, #e5484d 92%); border-radius: 1px; }
+
+/* sequencer */
+.seq { display: grid; gap: 10px; min-width: 0; }
+.seq-head { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.bars { display: inline-flex; gap: 4px; }
+.bar-key { width: 38px; min-height: 30px; font-family: var(--f-mono); }
+.bar-key.has::after { content: ""; position: absolute; left: 50%; bottom: 4px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--cap-ink); opacity: .55; }
+.bar-key.live { box-shadow: 0 0 0 2px var(--led); }
+.tools { display: inline-flex; gap: 6px; margin-left: auto; }
+.tool { height: 30px; border-radius: 7px; border: 1px solid var(--line); background: transparent; padding: 0 10px; font-size: 13px; color: var(--ink); }
+.tool:hover { border-color: var(--ink-2); }
+.grid-scroll { overflow-x: auto; padding-bottom: 4px; }
+.grid-inner { min-width: 760px; display: grid; gap: 6px; }
+.grid { display: grid; gap: 5px; }
+.row { display: grid; grid-template-columns: 36px 112px 30px minmax(0, 1fr) 30px; gap: 6px; align-items: center; border-radius: 9px; padding: 3px; }
+.row.sel { background: var(--raised); box-shadow: 0 0 0 1px var(--line) inset; }
+.pad { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--cap); background: var(--cap-2); position: relative; touch-action: manipulation; }
+.pad::after { content: ""; position: absolute; inset: 9px; border-radius: 4px; background: rgba(255,255,255,.08); }
+.pad.lit::after { background: var(--led); box-shadow: 0 0 12px var(--led); }
+.rname { display: grid; text-align: left; border: 0; background: none; padding: 0 2px; line-height: 1.1; }
+.rname b { font-family: var(--f-mono); font-weight: 400; font-size: 13px; color: var(--ink-2); }
+.rname span { font-weight: 600; font-size: 14px; }
+.row.sel .rname b { color: var(--sel); }
+.mute { width: 30px; height: 30px; border-radius: 7px; border: 1px solid var(--line); background: transparent; font-weight: 700; font-size: 12px; color: var(--ink-2); }
+.mute[aria-pressed="true"] { background: #c8423b; border-color: #c8423b; color: #fff; }
+.row.muted .cell.on { opacity: .45; }
+.steps { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 4px; }
+.cell { height: 36px; border-radius: 6px; border: 1px solid var(--line); background: var(--chassis); position: relative; padding: 0; overflow: hidden; touch-action: manipulation; -webkit-touch-callout: none; user-select: none; }
+.cell:nth-child(4n+1) { border-color: var(--ink-2); }
+.cell::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--vel, 0) * 100%); background: var(--led); opacity: 0; }
+.cell.on { background: var(--cap-2); border-color: var(--cap); }
+.cell.on::before { opacity: 1; }
+.cell.out { opacity: .35; background-image: repeating-linear-gradient(135deg, transparent 0 5px, var(--line) 5px 6px); }
+.cell.prob::before { background: repeating-linear-gradient(0deg, var(--led) 0 3px, transparent 3px 5px); }
+.cell.flam::after, .cell.auto::after, .cell.shift::after { content: ""; position: absolute; top: 4px; width: 5px; height: 5px; border-radius: 50%; }
+.cell.flam::after { left: 4px; background: var(--cap-ink); }
+.cell.auto::after { right: 4px; background: var(--vfd); }
+.cell.shift::after { left: 50%; margin-left: -2.5px; background: var(--cap-ink); border-radius: 0; }
+.cell.head { box-shadow: 0 0 0 2px var(--sel) inset; }
+.cell.on.head { box-shadow: 0 0 0 2px var(--cap-ink) inset, 0 0 12px var(--led-soft); }
+.cell.chosen { outline: 2px solid var(--sel); outline-offset: 1px; }
+.rlen { font-family: var(--f-mono); font-size: 13px; color: var(--ink-2); text-align: right; }
+.steps-num { display: grid; grid-template-columns: 36px 112px 30px minmax(0, 1fr) 30px; gap: 6px; padding: 0 3px; }
+.steps-num .n { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 4px; font-family: var(--f-mono); font-size: 11px; color: var(--ink-2); text-align: center; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px; color: var(--ink-2); }
+.legend span::before { content: ""; display: inline-block; width: 9px; height: 9px; margin-right: 5px; border-radius: 2px; vertical-align: -1px; }
+.legend .lg-vel::before { background: var(--led); }
+.legend .lg-prb::before { background: repeating-linear-gradient(0deg, var(--led) 0 2px, transparent 2px 4px); outline: 1px solid var(--line); }
+.legend .lg-flam::before { background: var(--cap-2); border-radius: 50%; }
+.legend .lg-auto::before { background: var(--vfd); border-radius: 50%; }
+.legend .lg-len::before { background: repeating-linear-gradient(135deg, transparent 0 3px, var(--ink-2) 3px 4px); }
+
+/* file */
+.filebox { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 13px; color: var(--ink-2); }
+.filebox label.tool { display: inline-flex; align-items: center; cursor: pointer; }
+.filebox input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+#file-msg:empty { display: none; }
+
+/* notes */
+.notes { background: var(--raised); border: 1px solid var(--line); border-radius: 14px; padding: 4px 20px; }
+.notes summary { cursor: pointer; padding: 14px 0; font-family: var(--f-display); font-weight: 500; font-size: 17px; letter-spacing: -.01em; }
+.notes .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 8px 32px; padding-bottom: 18px; }
+.notes h3 { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); margin: 14px 0 6px; }
+.notes p, .notes li { max-width: 66ch; margin: 0 0 8px; }
+.notes ul { padding-left: 18px; margin: 0; }
+.notes code { font-family: var(--f-mono); font-size: 13.5px; background: var(--chassis); padding: 0 4px; border-radius: 4px; }
+.flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 6px 0 10px; font-size: 13px; }
+.flow span { border: 1px solid var(--line); background: var(--chassis); padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+.flow i { font-style: normal; color: var(--ink-2); }
+.foot { font-size: 12.5px; color: var(--ink-2); max-width: 90ch; }
+
+@media (max-width: 1080px) {
+  .browser { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .patterns-wrap { grid-column: 1 / -1; }
+  .knobs { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}
+@media (max-width: 820px) {
+  .deck { grid-template-columns: minmax(0, 1fr); }
+  .mixer { grid-template-columns: repeat(7, minmax(0, 1fr)); justify-items: center; }
+  .fader .slot { min-height: 150px; }
+  .page-keys { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .track-keys { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .chassis { padding: 14px 12px; }
+  .browser { grid-template-columns: minmax(0, 1fr); }
+  .patterns { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .knobs { grid-template-columns: repeat(4, minmax(0, 1fr)); padding-inline: 4px; }
+  .dial { width: 54px; height: 54px; }
+  .transport { width: 100%; justify-content: space-between; }
+  .vfd .r1 { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .pat-key.pending { animation: none; outline: 2px solid var(--led); } }
+</style>
+
+<div class="wrap">
+  <main class="chassis" aria-label="LubkaM1 drum synthesizer">
+    <header class="top">
+      <div class="brand">
+        <h1>Lubka<span class="m1">M1</span></h1>
+        <p>six-voice digital drum synth</p>
+      </div>
+      <span class="status" id="status" role="status">Audio starts on first touch</span>
+      <div class="transport">
+        <button class="play" id="play" type="button" aria-pressed="false"><span class="ic"></span><span class="lbl">Play</span></button>
+        <div id="host-bpm"></div>
+        <div id="host-swing"></div>
+      </div>
+    </header>
+
+    <section class="browser" aria-label="Sound and pattern browser">
+      <label class="field"><span class="lbl-s">Project</span><select id="proj"></select><span class="credit" id="proj-credit"></span></label>
+      <div class="morph">
+        <label class="field"><span class="lbl-s">Kit</span><select id="kit"></select></label>
+      </div>
+      <div class="patterns-wrap">
+        <span class="lbl-s">Patterns</span>
+        <div class="patterns" id="patterns"></div>
+      </div>
+      <div class="morph">
+        <label class="field"><span class="lbl-s">Morph toward kit</span><select id="morph-kit"></select></label>
+        <div id="host-morph"></div>
+      </div>
+      <div class="opts">
+        <label><input type="checkbox" id="kitfollow" checked> Kit follows pattern</label>
+        <label><input type="checkbox" id="follow" checked> Follow playhead</label>
+      </div>
+      <div class="filebox">
+        <label class="tool" for="file">Open .SND / .PAT files</label>
+        <input type="file" id="file" accept=".snd,.SND,.pat,.PAT" multiple>
+        <span id="file-msg" role="status"></span>
+      </div>
+    </section>
+
+    <section class="deck">
+      <div class="screen-col">
+        <div class="vfd" aria-live="polite">
+          <div class="r1"><span id="v-track">Drum 1</span><span class="sep">/</span><span id="v-page">Osc</span><span class="tempo" id="v-tempo">120 bpm</span></div>
+          <div class="pname" id="v-pname"></div>
+          <div class="pval" id="v-pval"></div>
+          <div class="r3"><span><span class="k">kit</span><span id="v-kit"></span></span><span><span class="k">pat</span><span id="v-pat"></span></span><span id="v-pos"></span><span class="vleds" id="v-leds" aria-hidden="true"></span></div>
+        </div>
+        <div class="keys-row">
+          <div class="track-keys" id="track-keys" aria-label="Voice"></div>
+          <div class="page-keys" id="page-keys" aria-label="Parameter page"></div>
+        </div>
+        <div class="knobs" id="knobs"></div>
+      </div>
+      <div class="mixer" id="mixer" aria-label="Mixer"></div>
+    </section>
+
+    <section class="seq" aria-label="Step sequencer">
+      <div class="seq-head">
+        <span class="lbl-s">Bar</span>
+        <div class="bars" id="bars"></div>
+        <div class="legend" aria-hidden="true"><span class="lg-vel">velocity</span><span class="lg-prb">probability</span><span class="lg-flam">flam / shift</span><span class="lg-auto">automation</span><span class="lg-len">past track end</span></div>
+        <div class="tools">
+          <button class="tool" id="copy-bar" type="button">Copy bar to all</button>
+          <button class="tool" id="clear-track" type="button">Clear track</button>
+        </div>
+      </div>
+      <div class="grid-scroll"><div class="grid-inner">
+        <div class="steps-num" aria-hidden="true"><span></span><span></span><span></span><div class="n"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span></div><span></span></div>
+        <div class="grid" id="grid"></div>
+      </div></div>
+    </section>
+  </main>
+
+  <details class="notes">
+    <summary>How LubkaM1 is built</summary>
+    <div class="cols">
+      <div>
+        <h3>What this is</h3>
+        <p>LubkaM1 is a study remake of a six-voice digital drum synthesizer. It loads kit (<code>.SND</code>) and pattern (<code>.PAT</code>) files and plays them through a sound engine ported line by line from open-source drum-synth firmware.</p>
+        <p>The engine runs in an AudioWorklet at 44.1 kHz. As in the firmware, envelopes, LFOs and modulation update once per 64-sample block (about 1.45 ms) and the audio path works in a signed 16-bit scale with saturating adds.</p>
+        <h3>Drum voice signal path</h3>
+        <div class="flow"><span>Mod osc</span><i>→</i><span>FM or mix</span><i>→</i><span>Main osc</span><i>+</i><span>Click</span><i>→</i><span>ZDF filter</span><i>→</i><span>Amp EG × velocity</span><i>→</i><span>Drive</span><i>→</i><span>Volume, fader</span><i>→</i><span>Sample-rate reducer</span><i>→</i><span>Pan / out / FX bus</span></div>
+        <p>A decay envelope sweeps pitch and FM depth. One quirk is kept on purpose: the hardware converts the FM modulator with an unsigned cast, so only its positive half moves the carrier phase.</p>
+        <ul>
+          <li><b>Drum 1–3</b>: two oscillators (sine, triangle, saw, square, noise, pulse), pitch envelope, FM or mix mode.</li>
+          <li><b>Snare</b>: tuned oscillator plus filtered noise with a mix control and a repeat envelope for claps.</li>
+          <li><b>Cymbal, hats</b>: three-oscillator FM; the two hat tracks share one voice with closed and open decays, so they choke each other.</li>
+          <li><b>FX bus</b>: tube, wavefolder or diode-clipper distortion, ring modulator, compressor, mono or ping-pong delay.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>File formats decoded</h3>
+        <ul>
+          <li><b>Kit</b>: 8-byte name, then 247 parameter bytes (0–127) in the firmware's parameter order.</li>
+          <li><b>Pattern</b>: name, <code>PatV03</code> tag, then for 7 tracks × 64 steps: velocity, probability, note and two automation slots; a flam/shift byte per step; four 16-bit step masks per track; shuffle, track lengths and the linked kit slot.</li>
+          <li><b>Firmware image</b>: 16-byte header (8-byte tag, payload size, checksum) before raw ARM code. Versions 1.70 (275,832 bytes) and 1.71 (273,528 bytes) were inspected; the remake ports the published source rather than the compiled binary.</li>
+        </ul>
+        <h3>Sequencer</h3>
+        <p>A 96 PPQ clock gives 24 ticks per step. Flams (×2 to ×8) and micro-shifts of ±7 × 3 ticks are scheduled from the previous, current and next step, as in the firmware. Swing delays every second step by up to two thirds of a step. Each step can automate two parameters, which stay set until that track plays its next step.</p>
+        <h3>Not included</h3>
+        <p>MIDI, song chaining, the Euclidean generator, sample upload and SD storage. The second stereo output and the single outputs are mixed into the browser's stereo output.</p>
+        <h3>Using it</h3>
+        <p>Drag a knob up or down (Shift for fine steps), scroll on it, or use the arrow keys; double-click returns it to the kit's stored value. Space starts and stops; keys 1–7 play the voices. Right-click, long-press or Shift-click a step to edit its velocity, probability, flam, shift and automation.</p>
+      </div>
+    </div>
+  </details>
+  <p class="foot">LubkaM1 is an independent academic project. Its DSP and sequencer are a modified JavaScript port of open-source drum-synth firmware released under GPL-3.0-only, and LubkaM1 is offered under the same licence, without warranty. <!--__SOURCE__--></p>
+</div>
+
+<script type="application/json" id="d-meta">/*__META__*/</script>
+<script type="application/json" id="d-tables">/*__TABLES__*/</script>
+<script type="application/json" id="d-banks">/*__BANKS__*/</script>
+<!--__ENGINE_TAG__-->
+<script>/*__APP__*/</script>
