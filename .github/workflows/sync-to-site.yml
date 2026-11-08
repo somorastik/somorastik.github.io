@@ -1,11 +1,11 @@
 name: Sync project branches into the site
 
 # Each project lives in its own branch. GitHub Pages serves main, so whenever a project branch
-# changes, copy it into its folder on main (lubkam1/, p6-sampler/, great-chess/).
+# changes, copy it into its folder on main (lubkam1/, p6-sampler/, great-chess/, squelchbox/).
 # This file sits in every project branch, because a push runs the workflows of the pushed branch.
 on:
   push:
-    branches: [lubkam1, p6-sampler, great-chess]
+    branches: [lubkam1, p6-sampler, great-chess, squelchbox]
   workflow_dispatch:
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
         id: copy
         run: |
           set -e
-          for b in lubkam1 p6-sampler great-chess; do
+          for b in lubkam1 p6-sampler great-chess squelchbox; do
             git fetch --depth 1 origin "$b:refs/remotes/origin/$b"
             rm -rf "$b" && mkdir "$b"
             git archive "origin/$b" | tar -x -C "$b"
@@ -35,7 +35,7 @@ jobs:
           done
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git add -A lubkam1 p6-sampler great-chess
+          git add -A lubkam1 p6-sampler great-chess squelchbox
           if git diff --cached --quiet; then echo "Nothing to sync"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           git commit -m "Sync project branches into main"
           git push origin main
