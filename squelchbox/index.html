@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Squelchbox</title>
+  <meta name="description" content="An acid groovebox in the browser: 16-step sequencer with kick, hats, bass and a squelchy acid synth, overdrive, delay and reverb.">
+  <meta name="theme-color" content="#121017">
+  <link rel="icon" href="icons/icon.svg">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <img id="logo" src="icons/logo-still.png" alt="" width="64" height="80">
+      <div>
+        <h1>Squelchbox</h1>
+        <p>acid groovebox</p>
+      </div>
+    </div>
+
+    <div class="transport">
+      <button id="play" class="play" aria-label="Play" title="Play / stop (Space)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5v14l11-7z"/><rect class="i-stop" x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+      </button>
+      <div id="tempo" class="knob-row"></div>
+      <label class="field">Key <select id="key"></select></label>
+      <label class="field">Scale <select id="scale"></select></label>
+    </div>
+
+    <div class="banks">
+      <div id="bank-btns" class="seg" role="group" aria-label="Pattern bank"></div>
+      <button id="chain" class="btn toggle" aria-pressed="false" title="Play banks A→D in a loop">Chain</button>
+      <div class="btn-group">
+        <button id="copy" class="btn">Copy</button>
+        <button id="paste" class="btn" disabled>Paste</button>
+        <button id="clear-bank" class="btn">Clear</button>
+      </div>
+    </div>
+
+    <div class="out">
+      <canvas id="scope" width="360" height="72" aria-label="Output scope"></canvas>
+      <button id="export" class="btn" title="Render the loop to a WAV file">Export WAV</button>
+    </div>
+  </header>
+
+  <main id="rack"></main>
+
+  <button id="fab-play" class="play fab" aria-label="Play" title="Play / stop" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5v14l11-7z"/><rect class="i-stop" x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+  </button>
+
+  <footer>
+    <span><kbd>Space</kbd> play / stop</span>
+    <span><kbd>1</kbd>–<kbd>4</kbd> banks</span>
+    <span>Drag knobs up/down · <kbd>Shift</kbd> for fine · double-click (or double-tap) to reset</span>
+    <span>Long-press <kbd>S</kbd> to solo one track</span>
+    <span>Everything saves in this browser</span>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
