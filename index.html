@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>somorastik</title>
-<meta name="description" content="Browser instruments and projects: the LubkaM1 drum synth, a six-pad granular sampler, the Squelchbox acid groovebox and Great Chess.">
+<meta name="description" content="Browser instruments and projects: the LubkaM1 drum synth, a six-pad granular sampler, the Squelchbox acid groovebox, Great Chess and a Playwright testing demo.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231f2a37'/%3E%3Crect x='7' y='15' width='4' height='10' rx='1' fill='%23f2b134'/%3E%3Crect x='14' y='8' width='4' height='17' rx='1' fill='%23e8edf2'/%3E%3Crect x='21' y='12' width='4' height='13' rx='1' fill='%23f2b134'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -162,6 +162,10 @@ iframe { width: 100%; height: 100%; border: 0; display: block; background: var(-
       short: "Timur's chess",
       desc: "Tamerlane's chess on the 11 × 10 board with citadels, played against the computer in 2D or 3D, with a tutorial and the full rules.",
       icon: '<g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M9 23h10M10 20h8l-1-6h-6z"/><path d="M11 14c-1.5-1.5-1.2-4.6 1-5.6 1-.5 2-.4 2-.4s1-.1 2 .4c2.2 1 2.5 4.1 1 5.6"/><path d="M14 4v4M12.3 5.6h3.4" stroke-linecap="round"/></g>' },
+    { id: 'playwright-demo', group: 'projects', name: 'Playwright Demo', kind: 'QA · end-to-end testing',
+      short: 'Task list with Playwright tests',
+      desc: 'A small task list app with an end-to-end Playwright suite that runs in Chromium, Firefox, WebKit and a phone viewport on every push. The source branch explains the whole test setup step by step.',
+      icon: '<g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="4.5" width="19" height="19" rx="2.5"/><path d="M8 10l1.6 1.6L12.5 8.6M8 17.4l1.6 1.6 2.9-3"/><path d="M15.5 10.4h4M15.5 17.8h4"/></g>' },
   ];
   const $ = (s) => document.querySelector(s);
   const groups = { instruments: $('#g-instruments'), projects: $('#g-projects') };
