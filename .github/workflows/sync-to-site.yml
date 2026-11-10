@@ -1,0 +1,48 @@
+name: Sync project branches into the site
+
+# Each project lives in its own branch. GitHub Pages serves main, so whenever a project branch
+# changes, copy it into its folder on main (lubkam1/, p6-sampler/, great-chess/, squelchbox/,
+# playwright-demo/).
+# This file sits in every project branch, because a push runs the workflows of the pushed branch.
+on:
+  push:
+    branches: [lubkam1, p6-sampler, great-chess, squelchbox, playwright-demo]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: sync-projects
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Copy project branches into main
+        id: copy
+        run: |
+          set -e
+          for b in lubkam1 p6-sampler great-chess squelchbox playwright-demo; do
+            git fetch --depth 1 origin "$b:refs/remotes/origin/$b"
+            rm -rf "$b" && mkdir "$b"
+            git archive "origin/$b" | tar -x -C "$b"
+            rm -rf "$b/.github"
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A lubkam1 p6-sampler great-chess squelchbox playwright-demo
+          if git diff --cached --quiet; then echo "Nothing to sync"; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git commit -m "Sync project branches into main"
+          git push origin main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Request a Pages build
+        if: steps.copy.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "Pages build request not accepted; the push may have started one already."

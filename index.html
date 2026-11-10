@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Task List · Playwright demo</title>
+<meta name="description" content="A small task list app with an end-to-end test suite written in Playwright.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <p class="eyebrow">Playwright demo</p>
+    <h1>Task List</h1>
+    <p class="lede">A small app that a Playwright suite tests end to end. Your tasks are saved in this browser.</p>
+  </header>
+
+  <section class="card" aria-label="Task list">
+    <form id="new-task" novalidate>
+      <label for="task-input">New task</label>
+      <div class="row">
+        <input id="task-input" name="task" type="text" autocomplete="off" maxlength="120" placeholder="e.g. Reflow the USB-C connector">
+        <button type="submit" class="btn primary">Add</button>
+      </div>
+      <p id="form-error" class="error" role="alert"></p>
+    </form>
+
+    <ul id="tasks" aria-label="Tasks"></ul>
+    <p id="empty" class="empty">Nothing here yet.</p>
+
+    <footer class="bar">
+      <span id="count" aria-live="polite">0 tasks left</span>
+      <div class="filters" role="group" aria-label="Filter tasks">
+        <button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" class="chip" data-filter="active" aria-pressed="false">Active</button>
+        <button type="button" class="chip" data-filter="done" aria-pressed="false">Done</button>
+      </div>
+      <button type="button" id="clear-done" class="btn" disabled>Clear done</button>
+    </footer>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
